@@ -6,11 +6,13 @@ if (PHP_SAPI === 'cli') {
 
 $file_db = new PDO('sqlite:../database/database.sqlite');
 
-if (NULL == $_GET['id']) $_GET['id'] = 1;
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 1;
 
-$sql = 'SELECT * FROM employees WHERE employeeId = ' . $_GET['id'];
+$stmt = $file_db->prepare('SELECT * FROM employees WHERE employeeId = :id');
+$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+$stmt->execute();
 
-foreach ($file_db->query($sql) as $row) {
+foreach ($stmt as $row) {
     $employee = $row['LastName'] . " - " . $row['Email'] . "\n";
 
     echo $employee;
