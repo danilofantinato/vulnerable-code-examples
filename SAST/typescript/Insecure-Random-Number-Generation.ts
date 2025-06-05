@@ -1,7 +1,7 @@
 // File: sample.ts
 
-const insecureRandom = Math.random();
-console.log(`Insecure random number: ${insecureRandom}`);
+import { randomBytes } from 'crypto';
 
-// Insecure Random Number Generation (CWE-338)
-// This example illustrates the usage of Math.random() for generating random numbers, which is not suitable for cryptographic or security-sensitive purposes. SAST tools can detect this and recommend using a cryptographically secure random number generator for secure random number generation.
+const secureRandomBuffer = randomBytes(4);
+const secureRandomNumber = parseInt(secureRandomBuffer.toString('hex'), 16);
+console.log(`Secure random number: ${secureRandomNumber}`);
