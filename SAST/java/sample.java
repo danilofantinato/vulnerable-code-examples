@@ -1,10 +1,7 @@
 public class Sample {
     public static void main(String[] args) {
-      String password = "sensitivePassword";
-      System.out.println("Received password: " + password);
+        char[] password = "sensitivePassword".toCharArray();
+        System.out.println("Received password: " + new String(password));
+        Arrays.fill(password, ' ');
     }
-  }
-
-// (CWE-259)
-// This sample Java file includes code that prints a sensitive password to the console. 
-// It can be used to test SAST tools' capability to detect hardcoded passwords.
+}
