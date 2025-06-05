@@ -1,19 +1,23 @@
-
 <?php
 
 // Cross-Site Scripting (XSS)
-$name = $_GET['name'];
+$name = htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8');
 echo('Hello ' . $name);
 
 // SQL Injection
-$id = $_POST['id'];
-mysql_query("SELECT user FROM users WHERE id = " . $id);
+$id = (int) $_POST['id'];
+$conn = new mysqli($servername, $username, $password, $dbname);
+$stmt = $conn->prepare("SELECT user FROM users WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$stmt->close();
+$conn->close();
 
 // Command Injection
-$cmd = $_COOKIE['cmd'];
-exec("cat /var/log/apache2/access.log | grep " . $cmd);
+// Avoid executing external commands from user input
 
 // Deprecated Function
-$words = split(":", "split:this");
+$words = explode(":", "split:this");
 
 ?>
