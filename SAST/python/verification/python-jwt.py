@@ -1,9 +1,15 @@
-# If a JSON Web Token (JWT) is not signed with a strong cipher algorithm 
-# (or not signed at all) an attacker can forge it and impersonate user identities.
-
-#     Don’t use none algorithm to sign or verify the validity of a token.
-#     Don’t use a token without verifying its signature before.
-
 import python_jwt
 
-jwt.process_jwt(token)  # Noncompliant
+# Generate a secure key
+key = python_jwt.generate_key()
+
+# Encode the JWT with a secure algorithm (e.g., HS256)
+token = python_jwt.encode_jwt(payload, key, algorithm='HS256')
+
+# Verify the JWT signature before processing
+try:
+    payload = python_jwt.verify_jwt(token, key, algorithms=['HS256'])
+    python_jwt.process_jwt(payload)
+except python_jwt.InvalidTokenError:
+    # Handle invalid token
+    pass
