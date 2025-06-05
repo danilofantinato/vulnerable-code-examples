@@ -1,10 +1,13 @@
 <?php
 // File: sample.php
 
-$password = "sensitivePassword";
-echo "Received password: " . $password;
-?>
+// Sensitive data should not be hardcoded in the source code
+// Instead, use environment variables or configuration files
 
-<!-- (CWE-259)
-This sample PHP file demonstrates a simple echo statement that exposes a hardcoded password.
-It can be used to test SAST tools' capability to detect hardcoded passwords. -->
+// Retrieve the password from a secure source (e.g., environment variable)
+$password = getenv('SENSITIVE_PASSWORD');
+
+// Avoid echoing sensitive data
+// If necessary, use appropriate sanitization and encoding techniques
+echo "Password retrieved successfully.";
+?>
