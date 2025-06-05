@@ -1,15 +1,20 @@
 require 'net/http'
+require 'uri'
 
-def insecure_function(url)
-  uri = URI(url)
-  response = Net::HTTP.get(uri)
-  puts "Response: #{response}"
+def secure_function(url)
+  begin
+    uri = URI.parse(url)
+    raise ArgumentError, "Invalid URL" unless uri.kind_of?(URI::HTTP) || uri.kind_of?(URI::HTTPS)
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true if uri.scheme == 'https'
+    response = http.get(uri.request_uri)
+    puts "Response: #{response.body}"
+  rescue ArgumentError, URI::InvalidURIError => e
+    puts "Error: #{e.message}"
+  end
 end
 
-user_input = 'http://malicious-website.com'
-insecure_function(user_input)
-
-# (CWE-601)
-# This sample Ruby file includes a function that performs an insecure HTTP request without any proper 
-# input validation or sanitization. It can be used to test SAST tools' ability to identify security 
-# vulnerabilities like unvalidated redirects and forwards. 
+print "Enter a URL: "
+user_input = gets.chomp
+secure_function(user_input)
