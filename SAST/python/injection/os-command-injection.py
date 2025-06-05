@@ -1,9 +1,9 @@
-# The following code is vulnerable to command injections because 
-# it is using untrusted inputs to set up a new process. Therefore 
-# an attacker can execute an arbitrary program that is installed 
-# on the system.
-
 def ping():
-    cmd = "ping -c 1 %s" % request.args.get("host", "www.google.com")
-    status = os.system(cmd) # Noncompliant
-    return str(status == 0)
+    host = request.args.get("host", "www.google.com")
+    if not re.match(r'^[\w\.-]+$', host):
+        return "Invalid host"
+    try:
+        subprocess.check_call(["ping", "-c", "1", host], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return "True"
+    except subprocess.CalledProcessError:
+        return "False"
