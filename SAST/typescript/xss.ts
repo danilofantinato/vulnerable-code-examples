@@ -1,8 +1,8 @@
 // File: sample.ts
 
 const userInput = '<script>alert("XSS vulnerability");</script>';
-const message = `Hello, ${userInput}!`;
-document.getElementById('output').innerHTML = message;
-
-// Cross-Site Scripting (XSS) (CWE-79)
-// This example demonstrates a cross-site scripting (XSS) vulnerability by directly injecting user input into HTML content without proper sanitization. SAST tools can detect this vulnerability and suggest using appropriate encoding or escaping mechanisms to prevent XSS attacks.
+const message = `Hello, ${userInput.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}!`;
+const outputElement = document.getElementById('output');
+if (outputElement) {
+  outputElement.textContent = message;
+}
